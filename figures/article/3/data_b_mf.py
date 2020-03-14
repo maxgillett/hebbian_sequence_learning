@@ -12,7 +12,7 @@ sys.path.insert(0, 'theory')
 # compute_overlaps2 is a 2d Gaussian integral formulation
 # They are equivalent, but may differ due to numerical error
 from overlaps import overlaps_erf_bilinear as compute_overlaps1
-from overlaps_fast import overlaps_erf_bilinear as compute_overlaps2
+from overlaps_2d_formulation import overlaps_erf_bilinear as compute_overlaps2
 
 def main(args):
 

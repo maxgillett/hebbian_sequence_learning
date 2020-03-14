@@ -5,10 +5,8 @@ from gevent import joinall
 import argparse
 
 hosts = {
-    # TODO: Reenable Subhadra and Alessandro after Cosyne
-    # TODO: Limit to 4 cores on Subhadra's machine after March 5
-    #'Subhadra': '10.122.160.27', #'NBPhysics06.dhe.duke.edu', # 10.122.160.27
-    'Alex': 'NBPhysics04.dhe.duke.edu', # 10.122.160.25
+    #'Subhadra': '10.122.160.27',
+    'Alex': '10.122.160.25',
     #'Alessandro': '10.122.160.35',
     'Achint1': '10.122.160.34',  
     'Achint2': '10.122.160.21',
@@ -20,7 +18,7 @@ hosts = {
     #'Chicago4': '10.122.162.69',
 
     # Idle-only
-    #'Stan': 'NBPhysics02.dhe.duke.edu', # 10.122.160.23
+    #'Stan': '10.122.160.23',
 
     # Not working
     #'Chicago5': '10.122.162.166',
@@ -37,8 +35,8 @@ parser.add_argument('--cmd', dest='cmd', help='Command to run')
 args = parser.parse_args()
 
 print(list(hosts.values()))
-client1 = ParallelSSHClient(list(hosts.values()), user='mhg19') #, pkey='~/.ssh/id_rsa')
-client2 = ParallelSSHClient(list(hosts2.values()), user='mhg19') #, pkey='~/.ssh/id_rsa')
+client1 = ParallelSSHClient(list(hosts.values()), user='mhg19')
+client2 = ParallelSSHClient(list(hosts2.values()), user='mhg19')
 
 def print_output(output):
     for host, host_output in output.items():

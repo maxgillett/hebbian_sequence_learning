@@ -29,21 +29,18 @@ def main(args):
     net = RateNetwork(exc, c_EE=conn_EE, formulation=1)
 
     net.simulate(0.25, r0=exc.phi(patterns[0,0,:]))
-    #r0 = patterns[0,0,:]
-    #net.simulate(0.01, r0=np.zeros_like(r0), r_ext=r0)
-    #net.simulate(0.24, r0=net.exc.state[:,-1])
+
     r0 = patterns[1,0,:]
     net.simulate(0.01, r0=net.exc.state[:,-1], r_ext=r0)
     net.simulate(0.24, r0=net.exc.state[:,-1])
-    #net.simulate(0.25, r0=exc.phi(patterns[1,0,:]))
 
     M = np.mean(net.exc.state**2, axis=0)
     overlaps1 = sequences[0].overlaps(net, exc)
     overlaps2 = sequences[1].overlaps(net, exc)
 
-    #if args.save:
-    #    logging.info("Saving data")
-    #    np.save(open(args.data_path, "wb"), [M, overlaps1, overlaps2])
+    if args.save:
+        logging.info("Saving data")
+        np.save(open(args.data_path, "wb"), [M, overlaps1, overlaps2])
 
 
 if __name__ == '__main__':

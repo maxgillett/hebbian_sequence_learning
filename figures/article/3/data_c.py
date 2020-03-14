@@ -7,8 +7,7 @@ import pathlib
 import numpy as np
 
 sys.path.insert(0, 'theory')
-from overlaps import overlaps_erf_bilinear as compute_overlaps1
-from overlaps_fast import overlaps_erf_bilinear as compute_overlaps2
+from overlaps import overlaps_erf_bilinear as compute_overlaps
 
 def main(args):
 
@@ -19,7 +18,7 @@ def main(args):
     c = 0.005
     K = N*c
     P = np.asarray(args.patterns, dtype=int)
-    alpha = np.arange(1,25,2)*8/K
+    alpha = np.r_[np.arange(1,25,2)*8/K, 0.48]
 
     for i in range(P.size):
         logging.info("Computing P=%i" % P[i])
@@ -34,7 +33,6 @@ def main(args):
                 mu,
                 sigma,
                 alpha[args.alpha_index], 
-                args.mf_formulation,
                 args.num_cpus)
         else:
             datapath = args.datapath % ("theta_%0.2f_sigma_%0.2f_P_%i"%(mu,sigma,P[i]))
@@ -42,13 +40,12 @@ def main(args):
             # Compute and save for range of alphas
             for j in range(alpha.size):
                 logging.info("Computing alpha=%f" % alpha[j])
-                data.append(compute_max_correlation(P[i], mu, sigma, alpha[j],
-                    args.mf_formulation, args.num_cpus))
+                data.append(compute_max_correlation(P[i], mu, sigma, alpha[j], args.num_cpus))
         if args.save:
             logging.info("Saving data")
             np.save(open(datapath, "wb"), data)
 
-def compute_max_correlation(P, mu, sigma, alpha, formulation, n_workers=8):
+def compute_max_correlation(P, mu, sigma, alpha, n_workers=8):
     
     A = 1
     tau = 1e-2
@@ -64,14 +61,6 @@ def compute_max_correlation(P, mu, sigma, alpha, formulation, n_workers=8):
             if rho[-2] > rho[-1]:
                 return True
         return False
-
-    # Which mean-field formulation to use
-    if formulation == 1:
-        compute_overlaps = compute_overlaps1
-    elif formulation == 2:
-        compute_overlaps = compute_overlaps2
-    else:
-        raise Exception("Valid formulation not specified")
 
     m, M, _, rbar = compute_overlaps(
         np.around(T*1.1,2),
@@ -90,7 +79,6 @@ def compute_max_correlation(P, mu, sigma, alpha, formulation, n_workers=8):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-mf', '--mf_formulation', type=int, default=1)
     parser.add_argument('-c', '--num_cpus', type=int, default=20)
     parser.add_argument('-P', '--patterns', nargs='+', default=[8,16,32,64,128])
     parser.add_argument('-i', '--alpha_index', type=int, default=-1)

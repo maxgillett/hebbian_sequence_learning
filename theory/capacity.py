@@ -20,7 +20,6 @@ def g(M, params):
 def integrate_M(M, params, dt=0.2):
     return M + -dt * g(M, params)
 
-
 def find_M(M, params):
     eps = 1e-8
     while True:
@@ -29,7 +28,6 @@ def find_M(M, params):
         M = temp
     return M
 
-
 def h(alpha, params):
     'effective alpha'
     mu, sigma = params
@@ -37,10 +35,8 @@ def h(alpha, params):
                    (2 * (alpha + sigma**2))) / sqrt(2 * pi *
                                                         (alpha + sigma**2))
 
-
 def integrate_G(alpha, params, dt=0.10):
     return alpha + -dt * h(alpha, params)
-
 
 def effective_alpha(a, params):
     eps = 1e-8
@@ -51,7 +47,6 @@ def effective_alpha(a, params):
         if temp < 0: return 0
         a = temp
     return a
-
 
 def capacity(mu=np.asarray([0.2]), sigma=np.linspace(0.000, 0.35, 30)[::-1], debug=False):
     params = (mu, sigma)
